@@ -1,6 +1,6 @@
 # Studio B LLC — website
 
-Static site for **https://www.studiob.llc**, hosted on GitHub Pages. Plain HTML, CSS and JavaScript — no build step, no dependencies.
+Static site for **https://studiob.llc**, hosted on GitHub Pages. Plain HTML, CSS and JavaScript — no build step, no dependencies.
 
 ## Structure
 
@@ -37,29 +37,40 @@ Then open http://127.0.0.1:4173. The script mimics GitHub Pages: `/privacy-polic
 2. Repo **Settings → Pages → Build and deployment**: Source **Deploy from a branch**, branch **main**, folder **/ (root)**.
 3. Check the preview at https://rbauer.github.io/StudioBWebsite/.
 
-## Move the domain from Google Sites
+## Domain
 
-Do these together, once the preview looks right.
+The custom domain is **`studiob.llc`** (the bare domain), recorded in the `CNAME` file. GitHub redirects
+`www.studiob.llc` and plain `http://` to `https://studiob.llc`, keeping the path, so older `www` links still work.
+The certificate covers both hosts and renews automatically; **Enforce HTTPS** is on.
 
-1. **Verify the domain** (recommended; prevents takeover): GitHub account **Settings → Pages → Add a domain** →
-   `studiob.llc`, then add the TXT record it gives you at Dynadot.
-2. Repo **Settings → Pages → Custom domain**: `www.studiob.llc` → Save. GitHub commits a `CNAME` file.
-3. At Dynadot (**Dynadot DNS** mode — leave that dropdown alone):
+DNS at Dynadot (**Dynadot DNS** mode — leave that dropdown alone):
 
-   | Section | Type | Value |
-   |---|---|---|
-   | Domain record (root) | A | `185.199.108.153` |
-   | Domain record (root) | A | `185.199.109.153` |
-   | Domain record (root) | A | `185.199.110.153` |
-   | Domain record (root) | A | `185.199.111.153` |
-   | Subdomain `www` | CNAME | `rbauer.github.io` |
+| Section | Type | Value |
+|---|---|---|
+| Domain record (root) | A | `185.199.108.153` |
+| Domain record (root) | A | `185.199.109.153` |
+| Domain record (root) | A | `185.199.110.153` |
+| Domain record (root) | A | `185.199.111.153` |
+| Domain record (root) | TXT | SPF and site-verification records — keep |
+| Subdomain `www` | CNAME | `rbauer.github.io` |
 
-   Optional IPv6 on the root: AAAA `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.
+Email (MX) is managed under Dynadot's email settings and is unaffected by the site. There must be **no Forward
+record** on the root: it conflicts with the A records and sends every URL to the home page.
 
-   **Remove** the root **Forward** record — the A records replace it, and GitHub serves the bare domain itself,
-   with its own certificate. **Keep** the MX record (email) and the TXT records.
-4. When GitHub shows the certificate as issued, tick **Enforce HTTPS**.
-5. Afterwards, unpublish the Google Site or remove its custom URL, so nothing else claims the domain.
+Optional IPv6 on the root: AAAA `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.
+
+To check both Dynadot nameservers agree (they should return only the four `185.199.x.153` addresses):
+
+```
+nslookup studiob.llc ns1.dyna-ns.net
+nslookup studiob.llc ns2.dyna-ns.net
+```
+
+Still to do: **verify the domain** with GitHub (account **Settings → Pages → Add a domain** → `studiob.llc`, then add
+the TXT record it gives you at Dynadot) so no other GitHub account can claim it, and unpublish the old Google Site.
+
+If you ever switch the primary host to `www`, update the absolute URLs in the page `<head>`s, `sitemap.xml` and
+`robots.txt` to match.
 
 ## Keep the privacy policy true
 
