@@ -53,6 +53,7 @@ DNS at Dynadot (**Dynadot DNS** mode — leave that dropdown alone):
 | Domain record (root) | A | `185.199.111.153` |
 | Domain record (root) | TXT | SPF and site-verification records — keep |
 | Subdomain `www` | CNAME | `rbauer.github.io` |
+| Subdomain `_github-pages-challenge-rbauer` | TXT | GitHub domain-verification value — keep |
 
 Email (MX) is managed under Dynadot's email settings and is unaffected by the site. There must be **no Forward
 record** on the root: it conflicts with the A records and sends every URL to the home page.
@@ -66,8 +67,8 @@ nslookup studiob.llc ns1.dyna-ns.net
 nslookup studiob.llc ns2.dyna-ns.net
 ```
 
-Still to do: **verify the domain** with GitHub (account **Settings → Pages → Add a domain** → `studiob.llc`, then add
-the TXT record it gives you at Dynadot) so no other GitHub account can claim it, and unpublish the old Google Site.
+The domain is **verified** with GitHub (account **Settings → Pages**), which stops any other GitHub account from
+claiming it. That depends on the `_github-pages-challenge-rbauer` TXT record staying in place.
 
 If you ever switch the primary host to `www`, update the absolute URLs in the page `<head>`s, `sitemap.xml` and
 `robots.txt` to match.
